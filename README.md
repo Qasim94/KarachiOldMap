@@ -4,7 +4,7 @@ An interactive map of Karachi displaying historical map tiles hosted on Google C
 
 ## 🚀 Live Demo
 
-Visit the live map: [https://YOUR_USERNAME.github.io/KarachiOldMap/](https://YOUR_USERNAME.github.io/KarachiOldMap/)
+Visit the live map: [https://Qasim94.github.io/KarachiOldMap/](https://Qasim94.github.io/KarachiOldMap/)
 
 ## 📖 About
 
@@ -84,8 +84,8 @@ Contributions, issues, and feature requests are welcome!
 
 ## 📞 Contact
 
-- GitHub: [@YOUR_USERNAME](https://github.com/YOUR_USERNAME)
-- Project: [KarachiOldMap](https://github.com/YOUR_USERNAME/KarachiOldMap)
+- GitHub: [@Qasim94](https://github.com/Qasim94)
+- Project: [KarachiOldMap](https://github.com/Qasim94/KarachiOldMap)
 
 ---
 
