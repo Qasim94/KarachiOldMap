@@ -11,7 +11,7 @@ class KarachiTilesMap {
         this.initMap();
         this.setupTileLayer();
         this.setupEventListeners();
-        this.updateInfo();
+        // this.updateInfo(); // Commented out since info panel is hidden
     }
 
     initMap() {
@@ -48,7 +48,7 @@ class KarachiTilesMap {
         // Event handlers for debugging
         this.customTileLayer.on('tileload', (e) => {
             this.tilesLoaded++;
-            this.updateInfo();
+            // this.updateInfo(); // Commented out since info panel is hidden
             console.log('Tile loaded:', e.url);
         });
 
@@ -62,7 +62,7 @@ class KarachiTilesMap {
     setupEventListeners() {
         // Update info panel when map moves or zooms
         this.map.on('moveend zoomend', () => {
-            this.updateInfo();
+            // this.updateInfo(); // Commented out since info panel is hidden
         });
 
         // Opacity control
@@ -78,6 +78,8 @@ class KarachiTilesMap {
         }
     }
 
+    // updateInfo function commented out since info panel is hidden
+    /*
     updateInfo() {
         const zoom = this.map.getZoom();
         const center = this.map.getCenter();
@@ -87,6 +89,7 @@ class KarachiTilesMap {
             `${center.lat.toFixed(6)}, ${center.lng.toFixed(6)}`;
         document.getElementById('tilesLoaded').textContent = this.tilesLoaded;
     }
+    */
 }
 
 // Initialize the map when page loads
