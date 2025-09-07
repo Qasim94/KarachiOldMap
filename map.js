@@ -64,6 +64,18 @@ class KarachiTilesMap {
         this.map.on('moveend zoomend', () => {
             this.updateInfo();
         });
+
+        // Opacity control
+        const opacitySlider = document.getElementById('opacitySlider');
+        const opacityValue = document.getElementById('opacityValue');
+        
+        if (opacitySlider && opacityValue) {
+            opacitySlider.addEventListener('input', (e) => {
+                const opacity = parseFloat(e.target.value);
+                this.customTileLayer.setOpacity(opacity);
+                opacityValue.textContent = opacity.toFixed(1);
+            });
+        }
     }
 
     updateInfo() {
