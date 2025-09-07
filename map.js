@@ -1,26 +1,90 @@
-// Karachi Map Configuration for GCS-hosted tiles
-// This script loads map tiles from Google Cloud Storage
+// Karachi Tiles Map Application - GCS Version
+class KarachiTilesMap {
+    constructor() {
+        this.map = null;
+        this.customTileLayer = null;
+        this.tilesLoaded = 0;
+        this.init();
+    }
 
-// Configuration
-const CONFIG = {
-    // Google Cloud Storage bucket configuration
-    BUCKET_NAME: 'karachi_tiles',
-    TILES_PATH: '', // Empty because tiles are at root level of bucket
+    init() {
+        this.initMap();
+        this.setupTileLayer();
+        this.setupEventListeners();
+        this.updateInfo();
+    }
+
+    initMap() {
+        // Initialize the map centered exactly where your tiles exist
+        // From tilemapresource.xml: BoundingBox 66.91-67.08, 24.77-24.88
+        this.map = L.map('map', {
+            center: [24.8267, 66.9976], // Center of actual tile bounding box
+            zoom: 10, // Start at zoom 10 where tiles begin
+            maxZoom: 18,
+            minZoom: 1 // Allow zooming out to see the whole world
+        });
+
+        // Add base map underneath your tiles
+        const baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        });
+        baseLayer.addTo(this.map);
+    }
+
+    setupTileLayer() {
+        // GCS tile layer - this loads your tiles from Google Cloud Storage
+        this.customTileLayer = L.tileLayer('https://storage.googleapis.com/karachi_tiles/{z}/{x}/{y}.png', {
+            attribution: '© Karachi Tiles from Google Cloud Storage',
+            maxZoom: 18,
+            minZoom: 10,
+            tms: true, // Important: Use TMS coordinate system
+            opacity: 0.9,
+            // Define the bounds where tiles exist
+            bounds: [[24.775039672851562, 66.91925048828125], 
+                    [24.88196325605469, 67.08074951171875]]
+        });
+
+        // Event handlers for debugging
+        this.customTileLayer.on('tileload', (e) => {
+            this.tilesLoaded++;
+            this.updateInfo();
+            console.log('Tile loaded:', e.url);
+        });
+
+        this.customTileLayer.on('tileerror', (e) => {
+            console.log('Tile error:', e.tile.src);
+        });
+
+        this.customTileLayer.addTo(this.map);
+    }
+
+    setupEventListeners() {
+        // Update info panel when map moves or zooms
+        this.map.on('moveend zoomend', () => {
+            this.updateInfo();
+        });
+    }
+
+    updateInfo() {
+        const zoom = this.map.getZoom();
+        const center = this.map.getCenter();
+        
+        document.getElementById('currentZoom').textContent = zoom;
+        document.getElementById('currentCenter').textContent = 
+            `${center.lat.toFixed(6)}, ${center.lng.toFixed(6)}`;
+        document.getElementById('tilesLoaded').textContent = this.tilesLoaded;
+    }
+}
+
+// Initialize the map when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Initializing Karachi Tiles Map...');
+    console.log('Tile URL template: https://storage.googleapis.com/karachi_tiles/{z}/{x}/{y}.png');
+    console.log('Example tile: https://storage.googleapis.com/karachi_tiles/10/702/584.png');
     
-    // Map bounds (from tilemapresource.xml)
-    BOUNDS: {
-        north: 24.88196325605469,
-        south: 24.775039672851562,
-        east: 67.08074951171875,
-        west: 66.91925048828125
-    },
-    
-    // Default map center (Karachi center - adjusted to tile area)
-    CENTER: [24.8282, 67.0001], // Centered on available tiles
-    DEFAULT_ZOOM: 10, // Start at zoom level where tiles exist
-    MIN_ZOOM: 1,
-    MAX_ZOOM: 18
-};
+    window.karachiMap = new KarachiTilesMap();
+});
 
 // Initialize the map
 const map = L.map('map', {

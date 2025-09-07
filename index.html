@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karachi Map - Interactive Tile Viewer</title>
+    <title>Karachi Tiles Map Viewer (GCS)</title>
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -14,112 +14,84 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
+            font-family: Arial, sans-serif;
         }
-
+        
         #map {
             height: 100vh;
             width: 100%;
+            background-color: transparent !important;
         }
-
+        
+        /* Ensure Leaflet doesn't add blue background */
+        .leaflet-container {
+            background-color: transparent !important;
+        }
+        
+        .leaflet-tile {
+            background-color: transparent !important;
+        }
+        
         .info-panel {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
             z-index: 1000;
             max-width: 300px;
-            backdrop-filter: blur(10px);
         }
-
-        .info-panel h3 {
-            margin: 0 0 10px 0;
-            color: #2c3e50;
-            font-size: 16px;
+        
+        .info-item {
+            margin-bottom: 8px;
         }
-
-        .info-panel p {
-            margin: 5px 0;
-            color: #555;
-            font-size: 12px;
-            line-height: 1.4;
+        
+        .info-label {
+            font-weight: bold;
+            color: #333;
         }
-
-        .coordinates {
-            background: #ecf0f1;
-            padding: 8px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 11px;
+        
+        .info-value {
+            color: #666;
+        }
+        
+        .server-info {
+            background: #e8f5e8;
+            padding: 10px;
+            border-radius: 3px;
             margin-top: 10px;
-        }
-
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 8px;
-            z-index: 2000;
-            display: none;
-        }
-
-        .github-link {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            text-decoration: none;
             font-size: 12px;
-            z-index: 1001;
-            transition: background 0.3s;
-        }
-
-        .github-link:hover {
-            background: rgba(0, 0, 0, 0.9);
-            color: white;
-        }
-
-        /* Override Leaflet attribution to be more transparent */
-        .leaflet-control-attribution {
-            background-color: rgba(255, 255, 255, 0.8) !important;
-            backdrop-filter: blur(5px);
         }
     </style>
 </head>
 <body>
     <div id="map"></div>
     
-    <a href="https://github.com/Qasim94/KarachiOldMap" class="github-link" target="_blank">
-        📁 View on GitHub
-    </a>
-    
     <div class="info-panel">
-        <h3>🗺️ Karachi Interactive Map</h3>
-        <p><strong>Website:</strong> GitHub Pages</p>
-        <p><strong>Tiles:</strong> Google Cloud Storage</p>
-        <p><strong>Zoom Levels:</strong> 10-18</p>
-        <p><strong>Format:</strong> PNG Tiles (TMS)</p>
-        <div class="coordinates" id="coordinates">
-            Lat: 24.8607, Lng: 67.0011<br>
-            Zoom: 12
+        <h3>Karachi Map (GCS)</h3>
+        
+        <div class="info-item">
+            <span class="info-label">Current Zoom:</span>
+            <span class="info-value" id="currentZoom">-</span>
         </div>
-        <p style="margin-top: 10px; font-size: 10px; color: #888;">
-            Click on the map to see coordinates
-        </p>
-    </div>
-
-    <div class="loading" id="loading">
-        <p>Loading map tiles...</p>
+        
+        <div class="info-item">
+            <span class="info-label">Center:</span>
+            <span class="info-value" id="currentCenter">-</span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">Tiles Loaded:</span>
+            <span class="info-value" id="tilesLoaded">0</span>
+        </div>
+        
+        <div class="server-info">
+            <strong>Google Cloud Storage</strong><br>
+            Bucket: karachi_tiles<br>
+            <span id="serverStatus">Status: Connected</span>
+        </div>
     </div>
 
     <!-- Leaflet JavaScript -->
@@ -127,7 +99,7 @@
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
             crossorigin=""></script>
     
-    <!-- Custom Map Script -->
+    <!-- Custom map script -->
     <script src="map.js"></script>
 </body>
 </html>
