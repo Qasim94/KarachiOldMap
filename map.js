@@ -15,9 +15,9 @@ const CONFIG = {
         west: 66.91925048828125
     },
     
-    // Default map center (Karachi center)
-    CENTER: [24.8607, 67.0011],
-    DEFAULT_ZOOM: 12,
+    // Default map center (Karachi center - adjusted to tile area)
+    CENTER: [24.8282, 67.0001], // Centered on available tiles
+    DEFAULT_ZOOM: 10, // Start at zoom level where tiles exist
     MIN_ZOOM: 1,
     MAX_ZOOM: 18
 };
@@ -30,6 +30,12 @@ const map = L.map('map', {
     maxZoom: CONFIG.MAX_ZOOM,
     zoomControl: true
 });
+
+// Add a base map layer (OpenStreetMap)
+const baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
+}).addTo(map);
 
 // Create the tile layer using Google Cloud Storage URLs
 const karachiTileLayer = L.tileLayer(
@@ -48,6 +54,10 @@ const karachiTileLayer = L.tileLayer(
 
 // Add the tile layer to the map
 karachiTileLayer.addTo(map);
+
+// Debug: Log the tile URL template
+console.log('Tile URL template:', `https://storage.googleapis.com/${CONFIG.BUCKET_NAME}/{z}/{x}/{y}.png`);
+console.log('Example tile URL:', 'https://storage.googleapis.com/karachi_tiles/10/702/584.png');
 
 // Fit the map to the bounds of available tiles
 const bounds = L.latLngBounds(
