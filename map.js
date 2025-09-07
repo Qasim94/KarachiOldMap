@@ -5,7 +5,7 @@
 const CONFIG = {
     // Google Cloud Storage bucket configuration
     BUCKET_NAME: 'karachi_tiles',
-    TILES_PATH: 'karachi_tiles',
+    TILES_PATH: '', // Empty because tiles are at root level of bucket
     
     // Map bounds (from tilemapresource.xml)
     BOUNDS: {
@@ -33,7 +33,7 @@ const map = L.map('map', {
 
 // Create the tile layer using Google Cloud Storage URLs
 const karachiTileLayer = L.tileLayer(
-    `https://storage.googleapis.com/${CONFIG.BUCKET_NAME}/${CONFIG.TILES_PATH}/{z}/{x}/{y}.png`,
+    `https://storage.googleapis.com/${CONFIG.BUCKET_NAME}/{z}/{x}/{y}.png`,
     {
         attribution: '© Karachi Tiles | Hosted on Google Cloud Storage',
         tms: true, // Important: Use TMS coordinate system
